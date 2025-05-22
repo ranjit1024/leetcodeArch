@@ -47,9 +47,9 @@ const server = app.listen(8080, () => {
     console.log("listing on port : 8080");
 });
 const wss = new ws_1.WebSocketServer({ server });
+client.connect();
 wss.on('connection', (socket) => __awaiter(void 0, void 0, void 0, function* () {
     socket.on('error', console.error);
-    yield client.connect();
     socket.on('message', (data, isBinary) => __awaiter(void 0, void 0, void 0, function* () {
         if (socket.readyState === ws_1.default.OPEN) {
             client.subscribe('responses', (message) => {

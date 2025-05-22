@@ -15,9 +15,15 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         yield clinet.connect();
         while (1) {
+            let status = "error";
+            const channel = "responses";
             const response = yield clinet.brPop('responses', 0);
             console.log(response);
             yield new Promise((resolve) => setTimeout(resolve, 1000));
+            if (response) {
+                status = "success";
+            }
+            yield clinet.publish(channel, status);
             console.log("Proceed users resposonse");
         }
     });

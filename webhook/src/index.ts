@@ -12,10 +12,10 @@ const server = app.listen(8080, ()=>{
     console.log("listing on port : 8080");
 })
 const wss = new WebSocketServer({server})
+client.connect();
 
 wss.on('connection',  async (socket)=>{
     socket.on('error', console.error);
-    await client.connect();
     
     socket.on('message', async (data:any, isBinary:false)=>{
         if(socket.readyState === Websocket.OPEN){

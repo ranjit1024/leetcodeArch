@@ -8,17 +8,14 @@ app.use(express.json())
 app.use(cors())
 
 app.post("/sent",  async (req, res)=>{;
-    let status = "error";
-    const channel = "responses"
+    
     const {userId,problemId,message} = req.body;
-    const push =  await clinet.lPush("responses", JSON.stringify({userId,problemId,message}))
-    if(push){
-        status = "success"
-    }
+     await clinet.lPush("responses", JSON.stringify({userId,problemId,message}))
+
     res.json({
         message:'Successfully send'
     })
-    await clinet.publish(channel, status)
+    
 })
 
 async function startServer() {

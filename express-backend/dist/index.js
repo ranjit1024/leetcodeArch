@@ -21,17 +21,11 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.post("/sent", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     ;
-    let status = "error";
-    const channel = "responses";
     const { userId, problemId, message } = req.body;
-    const push = yield clinet.lPush("responses", JSON.stringify({ userId, problemId, message }));
-    if (push) {
-        status = "success";
-    }
+    yield clinet.lPush("responses", JSON.stringify({ userId, problemId, message }));
     res.json({
         message: 'Successfully send'
     });
-    yield clinet.publish(channel, status);
 }));
 function startServer() {
     return __awaiter(this, void 0, void 0, function* () {

@@ -1,10 +1,23 @@
-import { useRef } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import "./App.css";
 import axios from "axios";
 
 function App() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  
+  const [socket,setSocket] = useState<WebSocket | null >(null);
+  const [message, setMessage] = useState<string|null>(null)
+  useEffect(()=>{
+    const socket = new WebSocket("ws://localhost:8080/");
+    socket.onopen = ()=>{
+      console.log("connected");
+      setSocket(socket)
+    }
+    socket.onmessage = (message)=>{
+      setMessage(message.data);
+
+    }
+ 
+  },[])
   return (
     <>
       <div className="main">
@@ -27,12 +40,14 @@ function App() {
                 problemId:0.9,
                 message:inputRef.current.value
               })
-            }
+            };
+            socket && socket?.send("submit");
+            console.log(message)
           }}>Submit</button>
            </div>
         </div>
         <div className="status">
-          <p>count: </p>
+          <p>{message}</p>
         </div>
       </div>
     </>
