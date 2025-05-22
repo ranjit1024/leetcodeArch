@@ -1,15 +1,24 @@
 import express from "express"
 import { createClient } from "redis";
+import cors from "cors";
+
 const clinet = createClient();
 const app = express();
 app.use(express.json())
+app.use(cors())
 
-app.post("/sent", (req, res)=>{
+app.post("/sent",  async (req, res)=>{;
+    let status = "error";
+    const channel = "responses"
     const {userId,problemId,message} = req.body;
-    clinet.lPush("responses", JSON.stringify({userId,problemId,message}))
+    const push =  await clinet.lPush("responses", JSON.stringify({userId,problemId,message}))
+    if(push){
+        status = "success"
+    }
     res.json({
         message:'Successfully send'
     })
+    await clinet.publish(channel, status)
 })
 
 async function startServer() {
